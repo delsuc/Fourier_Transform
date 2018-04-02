@@ -10,7 +10,7 @@ The emphasis is set on spectroscopy (my main topic) rather than image processing
 This course comes from a teaching I've been doing to PhD doctorates of the IGBMC institute,
 where I am just starting with an empty notebook and discover python, and then FT in an interactive manner.
 
-*The course is based on the interactive capabilities of `ipywidgets` library, however, the graphics generated in this way do not display correctly on github*
+*The course is based on the interactive capabilities of `ipywidgets` library, however, the graphics generated in this way might not display well on github, but they work in jypyter*
 
 The first developped version has been created for the FT-MS school in Cabourg, France in april 2018.
 
@@ -22,7 +22,7 @@ fist contacts, a glimpse on python (you can find a longer presentation on [githu
 - [Fourier transform: definitions, basic properties](Definition_Properties.ipynb)
 basis of Fourier transform
 - [basic FT-MS processing](Basic_FT.ipynb) an interactive practical on the fundamentals of Fourier transform
-- advanced FT-MS processing
+- [advanced FT-MS processing](FTICR_1.ipynb), a complete processing of a FT-ICR dataset
 
 
 *Marc-André Delsuc*
