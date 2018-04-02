@@ -10,7 +10,10 @@ The emphasis is set on spectroscopy (my main topic) rather than image processing
 This course comes from a teaching I've been doing to PhD doctorates of the IGBMC institute,
 where I am just starting with an empty notebook and discover python, and then FT in an interactive manner.
 
+*The course is based on the interactive capabilities of `ipywidgets` library, however, the graphics generated in this way do not display correctly on github*
+
 The first developped version has been created for the FT-MS school in Cabourg, France in april 2018.
+
 
 # Organisation of the course:
 

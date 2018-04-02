@@ -1,0 +1,222 @@
+***********************************************************************
+**  THIS IS AN EXACT COPY OF THE ORIGINAL FILE USED FOR ACQUISITION. **
+**  THIS HEADER HAS BEEN ADDED FOR ARCHIVAL PURPOSES (AND TO CREATE  **
+**  A NON-EXECUTABLE STATE).                                         **
+***********************************************************************
+
+;==========================================================================
+; BASIC : Bruker Acquisition Sequence (for) Instrument Control
+;
+; A simplified generic event sequence (pulse program) for solariXcontrol.
+; This version supports ETD and MSn events as well as all other common
+; experimental timing, pulse and acquisition events using conditional
+; substitution based upon method parameter settings.
+;==========================================================================
+
+;--------------------------------------
+;Initialization Block
+;--------------------------------------
+; ~ ~ ~ ~ Automatic Definitions ~ ~ ~ ~
+; automatic frequency lists:
+define list<frequency> ExciteSweep = <ExciteSweep>
+; automatic loopcounters:
+define loopcounter ExciteSweep_size
+; ~ ~ ~ ~ Automatic Definitions ~ ~ ~ ~
+
+;--------------------------------------
+;Hystar autosuspend Block
+;--------------------------------------
+
+;--------------------------------------
+;Dataset Acquisition Block (L[20] loop)
+;--------------------------------------
+; AUTO_EXP_DELAY removed for 1D acquisition
+EXP_START,  ze		; clear memory buffers in DRU
+
+;--------------------------------------
+;Scan Accumulation Block (NS loop)
+;--------------------------------------
+; AUTO_SCAN_DELAY replaced with estimated delay based on other experimental delays
+NS_START, 10u			; start of scan accumulation (NS) loop
+; automatic loopcounters part 2
+"ExciteSweep_size = ExciteSweep.len"
+   1u setnmr4|7		; turn on Ultra RF amp (AGPP_OUT[0])
+   10u reset:f1		; reset phase of DDS in FCtrl-1
+   1u setnmr3|15|31		; set the collision cell Entrance and DC high
+  				; to make sure the quench works properly
+
+;--------------------------------------
+;Source & Infinity Cell Quench Block
+;--------------------------------------
+   1u setnmr3|14		; source hexapole quench on (XGPP(4))
+   ; simultaneously quench collison cell (DEFLECTION) + infinity cell (QUENCH)
+   25m setnmr3|24|27		; quenches on
+   1u setnmr3^14^24^27		; all quenches off
+
+;--------------------------------------
+;Dynamic Trap Plate Block (raise)
+;--------------------------------------
+; gated trapping not enabled
+
+;--------------------------------------
+;Ion Accumulation Block (start)
+;--------------------------------------
+SRCFILL, d1			; post quench delay (accumulate in source)
+
+;--------------------------------------
+;Accumulation in Collision Cell Block
+;--------------------------------------
+   1u setnmr3^15^31		; set collision cell Entrance and DC for accumulation
+   ; pulse train to simultaneously extract ions from h1 (d10) and open shutter
+   ((d10 setnmr3|14 1u setnmr3^14) (40m setnmr3|13))
+   d11			; post extract delay
+; ETD_EXPERIMENT ignored, ETD not enabled
+
+;--------------------------------------
+;Accumulation in Infinity Cell Block
+;--------------------------------------
+   1u setnmr3|15|31		; set the collision cell Entrance and DC for ejection
+   d2 setnmr3|24		; external ionization on (DEFLECTION)
+   1u setnmr3^24^13		; external ionization off, close shutter
+
+;--------------------------------------
+;MALDI Target Random Walk Event
+;--------------------------------------
+; MALDI source is not available or MALDI is disabled - MALDI_RANDOM_WALK ignored
+
+;--------------------------------------
+;Ion Accumulation Block (end)
+;(repeat Accumulation blocks for Source, Collision Cell, Infinity Cell)
+;--------------------------------------
+   lo to SRCFILL times l30	; collect L[30] ion generations
+
+;======================================================================
+; INTERNAL MS/MS
+; --> Possible Events automatically generated
+;  1) INFINITY_CELL_ISOLATION
+;  2) PULSED_VALVE_1 (for post-isolation/pre-SORI)
+;  3) SORI
+;  4) ECD
+;======================================================================
+
+; --- ISOLATION ---
+; IN_CELL_ISOLATION is disabled
+
+; --- PULSED_VALVE_1 ---
+; PULSED_VALVE_1 is not enabled for any MSn
+
+; --- SORI ---
+; SORI not enabled
+
+; --- IRMPD ---
+; IRMPD not enabled
+
+; --- ECD ---
+; ECD not enabled
+
+
+;======================================================================
+; INTERNAL MS^3
+; --> Possible Events automatically generated
+;  1) INTERMEDIATE_PUMP_DELAY
+;  2) INFINITY_CELL_ISOLATION_MS3
+;  3) PULSED_VALVE_1_MS3 (for post-isolation/pre-SORI)
+;  4) SORI_MS3
+;  5) ECD_MS3
+;======================================================================
+
+; --- INTERMEDIATE_PUMP_DELAY ---
+; INTERMEDIATE_PUMP_DELAY not necessary between MSMS and MS^3
+
+; --- ISOLATION ---
+; IN_CELL_ISOLATION_MS3 is disabled
+
+; --- PULSED_VALVE_1 ---
+; PULSED_VALVE_1 is not enabled for any MSn
+
+; --- SORI ---
+; SORI in MS^3 not enabled
+
+; --- IRMPD ---
+; IRMPD in MS^3 not enabled
+
+; --- ECD ---
+; ECD in MS^3 not enabled
+
+
+;======================================================================
+; INTERNAL MS^4
+; --> Possible Events automatically generated
+;  1) INTERMEDIATE_PUMP_DELAY
+;  2) INFINITY_CELL_ISOLATION_MS4
+;  3) PULSED_VALVE_1_MS4 (for post-isolation/pre-SORI)
+;  4) SORI_MS4
+;  5) ECD_MS4
+;======================================================================
+
+; --- INTERMEDIATE_PUMP_DELAY ---
+; INTERMEDIATE_PUMP_DELAY not necessary between MS^3 and MS^4
+
+; --- ISOLATION ---
+; IN_CELL_ISOLATION_MS4 is disabled
+
+; --- PULSED_VALVE_1 ---
+; PULSED_VALVE_1 is not enabled for any MSn
+
+; --- SORI ---
+; SORI in MS^4 not enabled
+
+; --- IRMPD ---
+; IRMPD in MS^4 not enabled
+
+; --- ECD ---
+; ECD in MS^4 not enabled
+
+
+;--------------------------------------
+;Final pumpdown after all MSn events
+;--------------------------------------
+; FINAL_PUMP_DELAY not enabled - No ACTIVE PULSED_VALVE events
+
+;--------------------------------------
+;Dynamic Trap Plate Block (lower)
+;--------------------------------------
+; gated trapping not enabled
+
+
+;======================================================================
+;         EXCITATION AND DETECTION
+;======================================================================
+
+;--------------------------------------
+;Excitation Block
+;--------------------------------------
+   10u pl3:f1			; set attenuation for excitation (FCtrl-1)
+EXC_SWP, p3 ph1 ExciteSweep:f1 ExciteSweep.inc	; broadcast current list entry and increment pointer
+   lo to EXC_SWP times ExciteSweep_size	; ExciteSweep_size entries/steps in excite list
+
+;--------------------------------------
+;Detection Block
+;--------------------------------------
+   1u setnmr4^7		; turn off Ultra RF amp before detect (AGPP_OUT[0])
+   go = NS_START ph1		; scan accumulation (loop to 10 times NS)
+
+;--------------------------------------
+;Write, Serial Loop, Exit Block
+;--------------------------------------
+   wr #0			; write data to disk
+   exit			; end acquisition/experiment
+
+;--------------------------------------
+; Phase program definitions for FCUs
+;--------------------------------------
+   ph1= 0 0 2 2		; phase program: 0 0 180 180 (exc/det RF)
+   ph2= 0 0 0 0		; phase program: 0 0 0 0 (all other RF)
+
+
+;======================================================================
+; This pulse program was generated using:
+; -> EventKeyNameDefs_Bruker.properties
+; -> IPSO_Bruker.properties
+; -> MS3_MS4_Bruker.properties
+;======================================================================
