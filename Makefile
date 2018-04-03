@@ -3,5 +3,5 @@
 all: *.html
 
 %.html: %.ipynb
-	jupyter nbconvert --to html $<
+	~/anaconda2/bin/jupyter nbconvert --to html $<
 	cp $@ HTML
