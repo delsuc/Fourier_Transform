@@ -25,5 +25,7 @@ basis of Fourier transform
 - [advanced FT-MS processing](FTICR_1.ipynb), a complete processing of a FT-ICR dataset
 
 
+the [HTML](HTML) folder contains a static rendering of the notebooks.
+
 *Marc-André Delsuc*
 
