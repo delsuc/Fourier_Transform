@@ -1,7 +1,13 @@
 .SUFFIXES: .html, .ipynb
+.PHONY : done clean all
+html := $(patsubst %.ipynb,%.html,$(wildcard *.ipynb))
 
-all: *.html
+done: all clean
+
+all: $(html)
+
+clean:
+	mv *.html HTML
 
 %.html: %.ipynb
-	~/anaconda2/bin/jupyter nbconvert --to html $<
-	cp $@ HTML
+	~/anaconda/bin/jupyter nbconvert --to html $<
