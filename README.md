@@ -7,7 +7,7 @@ The idea here is to emphasize  *exploration* and *feeling* of the FT rather than
 For this purpose I use jupyter notebook interactivity to display the basis of FT.
 The emphasis is set on spectroscopy (my main topic) rather than image processing or cristallography.
 
-*The course is based on the interactive capabilities of `ipywidgets` library, however, the graphics generated in this way might not display well on github, but they work in jupyter*
+*The course is based on the interactive capabilities of `ipywidgets` library, however, the graphics generated in this way might not display well on github (or not at all), but they work well in jupyter*
 
 This course is originated from a teaching I've been doing to PhD doctorates of the IGBMC institute,
 where I am just starting with an empty notebook and discover python, and then FT in an interactive manner.
