@@ -10,4 +10,4 @@ clean:
 	mv *.html HTML
 
 %.html: %.ipynb
-	~/anaconda/bin/jupyter nbconvert --to html $<
+	~/anaconda3/bin/jupyter nbconvert --to html $<
